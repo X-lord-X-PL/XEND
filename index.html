@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>XEND</title>
+ <link rel="stylesheet" href="style.css">
+ <link rel="shortcut icon" href="Xlifesteal.png" type="image/x-icon">
+</head>
+<body>
+
+  <nav>
+    <button onclick="showSection('home')" class="active">Strona główna</button>
+    <button onclick="showSection('tryby')">Tryby</button>
+    <button onclick="showSection('regulamin')">Regulamin</button>
+    <button onclick="showSection('topka')">Topka</button>
+    <button onclick="showSection('suppotr')">Support</button>
+  </nav>
+
+  <div id="home" class="section active">
+    <h1>Strona główna</h1>
+    <h2 class="ip">IP serwera : XEND.falixsrv.me</h2> 
+    <h2 class="wersja">Wersja sewera : 1.20.4</h2>
+    <h2 class="eventy">Najbliższy event : Event szkolny , data nie znana </h2>
+    <h2 class="gracze">Graczy online: <span id="playerCount">Ładowanie...</span></h2>
+  </div>
+
+  <div id="tryby" class="section">
+    <h1>Tryby</h1>
+    <img src="Xlifesteal.png" class="lfesteal">
+  </div>
+
+  <div id="regulamin" class="section">
+    <h1>Regulamin</h1>
+    <h2 class="regulamin1">1. Nie używaj cheatów, wspomagaczy</h2>
+    <h3 class="regulamin2">Dozwolone są tylko czyste klienty i mody nie dające przewagi w grze (np. optymalizacyjne).</h3>
+    <h2 class="regulamin1">2. Zachowuj kulturę</h2>
+    <h3 class="regulamin2">Unikaj wyzwisk, prowokacji i toksycznych zachowań wobec innych graczy.</h3>
+    <h2 class="regulamin1">Zakaz reklamy</h2>
+    <h3 class="regulamin2">Nie promuj innych serwerów, stron, Discordów ani mediów społecznościowych.</h3>
+    <h2 class="regulamin1">4. Nie wykorzystuj błędów gry ani systemu</h2>
+    <h3 class="regulamin2">Każdy błąd zgłoś administracji. Celowe wykorzystywanie może skutkować banem.</h3>
+    <h2 class="regulamin1">5. Nie spamuj i nie flooduj</h2>
+    <h3 class="regulamin2">Nie pisz tego samego wiele razy, nie używaj nadmiaru wielkich liter.</h3>
+    <h2 class="regulamin1">6. Wykonuj polecenia administracji</h2>
+    <h3 class="regulamin2">Administracja ma prawo do podjęcia decyzji w każdej sytuacji. Odwołania przyjmowane są na Discordzie.</h3>
+    <h2 class="regulamin1">7. Zakaz multikont</h2>
+    <h3 class="regulamin2">Korzystaj tylko z jednego konta. Omijanie banów lub zdobywanie korzyści przez inne konta jest zabronione.</h3>
+    <h2 class="regulamin1">8. Odpowiadasz za swoje konto</h2>
+    <h3 class="regulamin2">Nie tłumacz się, że grał ktoś inny. Konto = Twoja odpowiedzialność.</h3>
+  </div>
+
+  <div id="topka" class="section">
+    <h1>Topka</h1>
+  </div>
+
+  <div id="suppotr" class="section">
+    <form action="" method="post" enctype="multipart/form-data">
+     <fieldset>
+        <legend>Kontakt z supportem</legend>
+        <label for="nick">Twój nick:</label>
+        <input type="text" maxlength="16" placeholder="Podaj nick" id="nick" name="nick" required>
+
+        <label for="problem">Opisz swój problem:</label>
+
+        <textarea rows="10" placeholder="Opisz swój problem" name="Uwagi" required></textarea>
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+  <label for="dowod">Dodaj dowód (screen, plik):</label><br>
+  <input type="file" name="dowod" id="dowod" accept=".jpg,.jpeg,.png,.pdf" required><br><br>
+
+
+</form>
+
+        <input id="btnSumbit" type="submit" value="Prześlij">
+
+     </fieldset> 
+    </form>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.querySelectorAll('nav button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    const serverIP = "XEND.falixsrv.me";
+
+    function getPlayerCount() {
+      fetch(`https://api.mcsrvstat.us/2/${serverIP}`)
+        .then(response => response.json())
+        .then(data => {
+          const playerCount = document.getElementById("playerCount");
+          if (data.online) {
+            playerCount.textContent = data.players.online + " / " + data.players.max;
+          } else {
+            playerCount.textContent = "Serwer offline";
+          }
+        })
+        .catch(error => {
+          document.getElementById("playerCount").textContent = "Błąd pobierania";
+          console.error("Błąd API:", error);
+        });
+    }
+
+    getPlayerCount();
+    setInterval(getPlayerCount, 60000);
+  </script>
+
+</body>
+</html>
+
